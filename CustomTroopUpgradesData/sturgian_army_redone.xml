@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<CustomTroopUpgrades>
+<CustomTroopUpgrades Module="SturgianArmyReDone">
+  <!-- Sturgian melee -->
   <CustomTroopUpgrade Source="sturgian_warrior" Destination="sturgian_soldier" DeleteUpgradePath="true" />
   <CustomTroopUpgrade Source="sturgian_warrior" Destination="sturgian_warrior_new" />
 
@@ -15,6 +16,12 @@
   
   <CustomTroopUpgrade Source="sturgian_veteran_warrior" Destination="sturgian_veteran_warrior_new" />
 
+  <CustomTroopUpgrade Source="sturgian_berzerker" Destination="sturgian_ulfhednar" DeleteUpgradePath="true" />
+  <CustomTroopUpgrade Source="sturgian_berzerker" Destination="sturgian_berzerker_new" />
+
+  <CustomTroopUpgrade Source="sturgian_ulfhednar" Destination="sturgian_ulfhednar_new" />
+
+  <!-- Sturgian ranged -->
   <CustomTroopUpgrade Source="sturgian_woodsman" Destination="sturgian_brigand" DeleteUpgradePath="true" />
   <CustomTroopUpgrade Source="sturgian_woodsman" Destination="sturgian_hunter" DeleteUpgradePath="true" />
   <CustomTroopUpgrade Source="sturgian_woodsman" Destination="sturgian_woodsman_new" />
@@ -30,9 +37,20 @@
   <CustomTroopUpgrade Source="sturgian_brigand" Destination="sturgian_hardened_brigand" DeleteUpgradePath="true" />
   <CustomTroopUpgrade Source="sturgian_brigand" Destination="sturgian_brigand_new" />
 
-  <CustomTroopUpgrade Source="sturgian_berzerker" Destination="sturgian_ulfhednar" DeleteUpgradePath="true" />
-  <CustomTroopUpgrade Source="sturgian_berzerker" Destination="sturgian_berzerker_new" />
+  <CustomTroopUpgrade Source="sturgian_hardened_brigand" Destination="sturgian_horse_raider" DeleteUpgradePath="true" />
+  <CustomTroopUpgrade Source="sturgian_hardened_brigand" Destination="sturgian_hardened_brigand_new" />
+
+  <CustomTroopUpgrade Source="sturgian_horse_raider" Destination="sturgian_horse_raider_new" />
+
+  <!-- Warrior sons and varyags -->
+  <CustomTroopUpgrade Source="varyag" Destination="vayrag_veteran" DeleteUpgradePath="true" />
+  <CustomTroopUpgrade Source="varyag" Destination="varyag_new" />
   
-  <CustomTroopUpgrade Source="sturgian_ulfhednar" Destination="sturgian_ulfhednar_new" />
+  <CustomTroopUpgrade Source="vayrag_veteran" Destination="druzhinnik" DeleteUpgradePath="true" />
+  <CustomTroopUpgrade Source="vayrag_veteran" Destination="vayrag_veteran_new" />
+
+  <CustomTroopUpgrade Source="druzhinnik" Destination="druzhinnik_champion" DeleteUpgradePath="true" />
+  <CustomTroopUpgrade Source="druzhinnik" Destination="varyag_champion" />
   
+  <CustomTroopUpgrade Source="druzhinnik_champion" Destination="varyag_huskarl" />
 </CustomTroopUpgrades>

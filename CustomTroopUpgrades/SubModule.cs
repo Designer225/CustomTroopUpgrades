@@ -72,7 +72,7 @@ namespace CustomTroopUpgrades
                 if (!upgradeTargets.Contains(destination) && !deleteUpgradePath)
                 {
                     if (upgradeTargets.Count == 2)
-                        Debug.PrintWarning("[CustomTroopUpgrades] Total upgrade target count reached (max 2). Consider applying delete operations. Stopping addition.");
+                        Debug.PrintWarning("[CustomTroopUpgrades] Total upgrade target count reached (max 2). Consider applying delete operations first. Stopping addition.");
                     else
                         upgradeTargets.Add(destination);
                 }

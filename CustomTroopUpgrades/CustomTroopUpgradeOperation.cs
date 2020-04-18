@@ -24,6 +24,9 @@ namespace CustomTroopUpgrades
     [XmlRoot("CustomTroopUpgrades", IsNullable = false)]
     public class CustomTroopUpgrades
     {
+        [XmlAttribute]
+        public string Module { get; set; }
+
         [XmlElement("CustomTroopUpgrade")]
         public CustomTroopUpgradeOperation[] CustomTroopUpgradeOps { get; set; }
     }
