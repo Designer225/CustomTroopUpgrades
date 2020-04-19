@@ -76,7 +76,8 @@ namespace CustomTroopUpgrades
 
         public static void ApplyOperations(CustomTroopUpgrades upgrades, Game g = null)
         {
-            if (!Modules.Exists(x => x.Id.Equals(upgrades.Module))) return;
+            if (Modules.Where(x => upgrades.DependentModules.Contains(x.Id)).Count() < upgrades.DependentModules.Count()) return;
+            //if (!Modules.Exists(x => x.Id.Equals(upgrades.Modules))) return;
             if (g == null) g = Game.Current;
 
             var objectList = g.ObjectManager.GetObjectTypeList<CharacterObject>();

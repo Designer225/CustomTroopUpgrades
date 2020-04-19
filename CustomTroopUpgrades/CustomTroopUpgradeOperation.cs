@@ -37,17 +37,22 @@ namespace CustomTroopUpgrades
         // For XMLSerializer only
         private CustomTroopUpgrades() { }
 
-        public CustomTroopUpgrades(string module = "SandBoxCore", params CustomTroopUpgradeOperation[] ctuOps)
+        public CustomTroopUpgrades(string[] modules = null, params CustomTroopUpgradeOperation[] ctuOps)
         {
-            Module = module;
-            CustomTroopUpgradeOps = ctuOps;
+            if (modules == null || modules.Count() == 0)
+                DependentModules = new string[] { "SandBoxCore" };
+            else
+                DependentModules = modules;
+            CustomTroopUpgradeOps = ctuOps ?? (new CustomTroopUpgradeOperation[] { });
         }
 
-        [XmlAttribute]
-        [DefaultValue("SandBoxCore")]
-        public string Module { get; set; }
+        [XmlArray]
+        [XmlArrayItem(typeof(string), ElementName = "Module")]
+        [DefaultValue(new string[] { "SandBoxCore" })]
+        public string[] DependentModules { get; set; }
 
-        [XmlElement("CustomTroopUpgrade")]
+        [XmlArray("CustomTroopUpgradeOperations")]
+        [XmlArrayItem(typeof(CustomTroopUpgradeOperation), ElementName = "CustomTroopUpgrade")]
         public CustomTroopUpgradeOperation[] CustomTroopUpgradeOps { get; set; }
     }
 }
