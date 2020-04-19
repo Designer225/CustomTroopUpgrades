@@ -74,7 +74,7 @@ namespace CustomTroopUpgrades
             }
         }
 
-        public void ApplyOperations(CustomTroopUpgrades upgrades, Game g = null)
+        public static void ApplyOperations(CustomTroopUpgrades upgrades, Game g = null)
         {
             if (!Modules.Exists(x => x.Id.Equals(upgrades.Module))) return;
             if (g == null) g = Game.Current;

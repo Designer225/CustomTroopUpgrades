@@ -46,8 +46,8 @@
   <CustomTroopUpgrade Source="varyag" Destination="vayrag_veteran" DeleteUpgradePath="true" />
   <CustomTroopUpgrade Source="varyag" Destination="varyag_new" />
   
-  <CustomTroopUpgrade Source="vayrag_veteran" Destination="druzhinnik" DeleteUpgradePath="true" />
-  <CustomTroopUpgrade Source="vayrag_veteran" Destination="vayrag_veteran_new" />
+  <CustomTroopUpgrade Source="varyag_veteran" Destination="druzhinnik" DeleteUpgradePath="true" />
+  <CustomTroopUpgrade Source="varyag_veteran" Destination="vayrag_veteran_new" />
 
   <CustomTroopUpgrade Source="druzhinnik" Destination="druzhinnik_champion" DeleteUpgradePath="true" />
   <CustomTroopUpgrade Source="druzhinnik" Destination="varyag_champion" />
