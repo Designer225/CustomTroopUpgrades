@@ -10,6 +10,15 @@ namespace CustomTroopUpgrades
 {
     public class CustomTroopUpgradeOperation
     {
+        public CustomTroopUpgradeOperation() { }
+
+        public CustomTroopUpgradeOperation(string src, string dest, bool delete = false)
+        {
+            Source = src;
+            Destination = dest;
+            DeleteUpgradePath = delete;
+        }
+
         [XmlAttribute]
         public string Source { get; set; }
 
@@ -24,7 +33,16 @@ namespace CustomTroopUpgrades
     [XmlRoot("CustomTroopUpgrades", IsNullable = false)]
     public class CustomTroopUpgrades
     {
+        public CustomTroopUpgrades() { }
+
+        public CustomTroopUpgrades(string module = "SandBoxCore", params CustomTroopUpgradeOperation[] ctuOps)
+        {
+            Module = module;
+            CustomTroopUpgradeOps = ctuOps;
+        }
+
         [XmlAttribute]
+        [DefaultValue("SandBoxCore")]
         public string Module { get; set; }
 
         [XmlElement("CustomTroopUpgrade")]

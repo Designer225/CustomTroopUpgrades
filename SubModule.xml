@@ -16,7 +16,7 @@
     <SubModule>
       <Name value="CustomTroopUpgrades"/>
       <DLLName value="CustomTroopUpgrades.dll"/>
-      <SubModuleClassType value="CustomTroopUpgrades.SubModule"/>
+      <SubModuleClassType value="CustomTroopUpgrades.CustomTroopUpgradesCore"/>
       <Tags>
         <Tag key="DedicatedServerType" value="none" />
         <Tag key="IsNoRenderModeElement" value="false" />
