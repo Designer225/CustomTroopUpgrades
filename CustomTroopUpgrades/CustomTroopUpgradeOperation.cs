@@ -10,7 +10,8 @@ namespace CustomTroopUpgrades
 {
     public class CustomTroopUpgradeOperation
     {
-        public CustomTroopUpgradeOperation() { }
+        // For XMLSerializer only
+        private CustomTroopUpgradeOperation() { }
 
         public CustomTroopUpgradeOperation(string src, string dest, bool delete = false)
         {
@@ -33,7 +34,8 @@ namespace CustomTroopUpgrades
     [XmlRoot("CustomTroopUpgrades", IsNullable = false)]
     public class CustomTroopUpgrades
     {
-        public CustomTroopUpgrades() { }
+        // For XMLSerializer only
+        private CustomTroopUpgrades() { }
 
         public CustomTroopUpgrades(string module = "SandBoxCore", params CustomTroopUpgradeOperation[] ctuOps)
         {
