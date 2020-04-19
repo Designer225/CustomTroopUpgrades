@@ -35,22 +35,21 @@ namespace CustomTroopUpgrades
     [XmlRoot("CustomTroopUpgrades", IsNullable = false)]
     public class CustomTroopUpgrades : IComparable<CustomTroopUpgrades>
     {
+        internal static readonly string[] DEFAULT_MODULES = { "Native", "SandBoxCore", "Sandbox", "StoryMode", "CustomBattle" };
+
         // For XMLSerializer only
         private CustomTroopUpgrades() { }
 
         public CustomTroopUpgrades(string[] modules = null, int priority = 1000, params CustomTroopUpgradeOperation[] ctuOps)
         {
-            if (modules == null || modules.Count() == 0)
-                DependentModules = new string[] { "SandBoxCore" };
-            else
-                DependentModules = modules;
+            DependentModules = modules;
+            ProcessModules();
             Priority = priority;
             CustomTroopUpgradeOps = ctuOps ?? (new CustomTroopUpgradeOperation[] { });
         }
 
         [XmlArray]
         [XmlArrayItem(typeof(string), ElementName = "Module")]
-        [DefaultValue(new string[] { "SandBoxCore" })]
         public string[] DependentModules { get; set; }
 
         [XmlAttribute]
@@ -67,26 +66,33 @@ namespace CustomTroopUpgrades
 
             if (value == 0)
             {
-                // Creating a set first to remove duplicates
-                var copyThis = new HashSet<string>(DependentModules).ToList();
-                var copyOther = new HashSet<string>(other.DependentModules).ToList();
-                // Sorting the thing first just in case.
-                copyThis.Sort();
-                copyOther.Sort();
-
-                for (int i = 0; i < copyThis.Count && i < copyOther.Count; i++)
+                for (int i = 0; i < DependentModules.Count() && i < other.DependentModules.Count(); i++)
                 {
-                    value = copyThis[i].CompareTo(copyOther[i]);
+                    value = DependentModules[i].CompareTo(other.DependentModules[i]);
 
                     if (value != 0)
                         break;
                 }
 
                 if (value == 0)
-                    value = copyThis.Count.CompareTo(copyOther.Count);
+                    value = DependentModules.Count().CompareTo(other.DependentModules.Count());
             }
 
             return value;
+        }
+
+        internal void ProcessModules ()
+        {
+            var combined = new List<string>(DEFAULT_MODULES);
+            if (DependentModules != null)
+                combined.AddRange(DependentModules);
+            for (int i = 0; i < combined.Count; i++)
+            {
+                combined[i] = combined[i].ToLowerInvariant();
+            }
+            combined = combined.ToHashSet().ToList();
+            combined.Sort();
+            DependentModules = combined.ToArray();
         }
     }
 }

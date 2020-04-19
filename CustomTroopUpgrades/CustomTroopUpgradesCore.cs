@@ -27,12 +27,12 @@ namespace CustomTroopUpgrades
             base.OnGameInitializationFinished(game);
             if (Campaign.Current == null)
                 return;
+            if (!Modules.IsEmpty()) Modules.Clear();
+            if (!CustomTroopUpgradesList.IsEmpty()) CustomTroopUpgradesList.Clear();
 
             // DO NOT USE TaleWorlds.Library.ModuleInfo.GetModules()! It gets ALL modules, not just the active ones.
             // Use TaleWorlds.Engine.Utilities.GetModulesNames(), then load ModuleInfos individually.
             // That function returns all ACTIVE modules instead.
-            if (!Modules.IsEmpty()) Modules.Clear();
-            if (!CustomTroopUpgradesList.IsEmpty()) CustomTroopUpgradesList.Clear();
 
             string[] moduleNames = Utilities.GetModulesNames();
             foreach (string moduleName in moduleNames)
@@ -42,17 +42,19 @@ namespace CustomTroopUpgrades
                 Modules.Add(m);
             }
 
+            XmlSerializer deserializer = new XmlSerializer(typeof(CustomTroopUpgrades));
             foreach (ModuleInfo module in Modules)
             {
                 DirectoryInfo dataPath = new DirectoryInfo(System.IO.Path.Combine(ModulesPath, module.Alias, "CustomTroopUpgradesData"));
                 if (dataPath.Exists)
                 {
-                    XmlSerializer deserializer = new XmlSerializer(typeof(CustomTroopUpgrades));
                     foreach (FileInfo xmlFile in dataPath.EnumerateFiles("*.xml"))
                     {
                         try
                         {
-                            CustomTroopUpgradesList.Add(deserializer.Deserialize(xmlFile.OpenText()) as CustomTroopUpgrades);
+                            var upgrade = deserializer.Deserialize(xmlFile.OpenText()) as CustomTroopUpgrades;
+                            upgrade.ProcessModules();
+                            CustomTroopUpgradesList.Add(upgrade);
                         }
                         catch (Exception e)
                         {
@@ -73,7 +75,7 @@ namespace CustomTroopUpgrades
                 }
                 catch (Exception e)
                 {
-                    Debug.PrintError(string.Format("[CustomTroopUpgrades] Failed to apply upgrade.\n\nError: {0}\n\n{1}",
+                    Debug.PrintError(string.Format("[CustomTroopUpgrades] Failed to apply upgrade set.\n\nError: {0}\n\n{1}",
                         e.Message, e.StackTrace), e.StackTrace);
                 }
             }
@@ -81,7 +83,7 @@ namespace CustomTroopUpgrades
 
         public static void ApplyOperations(CustomTroopUpgrades upgrades, Game g = null)
         {
-            if (Modules.Where(x => upgrades.DependentModules.Contains(x.Id)).Count() < upgrades.DependentModules.Count()) return;
+            if (Modules.Where(x => upgrades.DependentModules.Contains(x.Id.ToLowerInvariant())).Count() < upgrades.DependentModules.Count()) return;
             if (g == null) g = Game.Current;
 
             var objectList = g.ObjectManager.GetObjectTypeList<CharacterObject>();
@@ -103,7 +105,8 @@ namespace CustomTroopUpgrades
                 if (!upgradeTargets.Contains(destination) && !deleteUpgradePath)
                 {
                     if (upgradeTargets.Count == 2)
-                        Debug.PrintWarning("[CustomTroopUpgrades] Total upgrade target count reached (max 2). Consider applying delete operations first. Stopping addition.");
+                        Debug.PrintWarning("[CustomTroopUpgrades] Total upgrade target count reached (max 2). Consider applying delete operations first. Stopping addition.\n" +
+                            String.Format("source: {0}, targets: {1}, attempting to add: {2}", source.StringId, upgradeTargets.Select(x => x.StringId), destination.StringId));
                     else
                         upgradeTargets.Add(destination);
                 }
