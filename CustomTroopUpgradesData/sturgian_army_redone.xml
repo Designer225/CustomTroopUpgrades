@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<CustomTroopUpgrades Priority="10">
+<CustomTroopUpgrades Priority="1000">
   <DependentModules>
     <Module>SturgianArmyReDone</Module>
   </DependentModules>

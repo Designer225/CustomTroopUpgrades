@@ -38,7 +38,7 @@ namespace CustomTroopUpgrades
         // For XMLSerializer only
         private CustomTroopUpgrades() { }
 
-        public CustomTroopUpgrades(string[] modules = null, int priority = 10, params CustomTroopUpgradeOperation[] ctuOps)
+        public CustomTroopUpgrades(string[] modules = null, int priority = 1000, params CustomTroopUpgradeOperation[] ctuOps)
         {
             if (modules == null || modules.Count() == 0)
                 DependentModules = new string[] { "SandBoxCore" };
@@ -54,7 +54,7 @@ namespace CustomTroopUpgrades
         public string[] DependentModules { get; set; }
 
         [XmlAttribute]
-        [DefaultValue(10)]
+        [DefaultValue(1000)]
         public int Priority { get; set; }
 
         [XmlArray("CustomTroopUpgradeOperations")]
