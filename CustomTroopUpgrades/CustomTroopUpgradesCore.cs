@@ -17,8 +17,10 @@ namespace CustomTroopUpgrades
     public class CustomTroopUpgradesCore : MBSubModuleBase
     {
         public static string ModulesPath { get; private set; } = System.IO.Path.Combine(BasePath.Name, "Modules");
-        //public static string ModulePath { get; private set; } = System.IO.Path.Combine(BasePath.Name, "Modules", "CustomTroopUpgrades");
+        
         public static List<ModuleInfo> Modules { get; private set; } = new List<ModuleInfo>();
+
+        public static List<CustomTroopUpgrades> CustomTroopUpgradesList { get; private set; } = new List<CustomTroopUpgrades>();
 
         public override void OnGameInitializationFinished(Game game)
         {
@@ -26,13 +28,11 @@ namespace CustomTroopUpgrades
             if (Campaign.Current == null)
                 return;
 
-            //DirectoryInfo moduleDir = new DirectoryInfo(ModulePath);
-            //if (!moduleDir.Exists) return; // This should never happen. If it happens, this mod is the least of your problem.
-
             // DO NOT USE TaleWorlds.Library.ModuleInfo.GetModules()! It gets ALL modules, not just the active ones.
             // Use TaleWorlds.Engine.Utilities.GetModulesNames(), then load ModuleInfos individually.
             // That function returns all ACTIVE modules instead.
             if (!Modules.IsEmpty()) Modules.Clear();
+            if (!CustomTroopUpgradesList.IsEmpty()) CustomTroopUpgradesList.Clear();
 
             string[] moduleNames = Utilities.GetModulesNames();
             foreach (string moduleName in moduleNames)
@@ -44,14 +44,6 @@ namespace CustomTroopUpgrades
 
             foreach (ModuleInfo module in Modules)
             {
-                //string stuff = string.Format("[CustomTroopUpgradesDebug] Printing module {0} information:\n", module.Id);
-                //stuff += string.Format("[CustomTroopUpgradesDebug] module ID {0} matches Alias {1}: {2}\n",
-                //    module.Id, module.Alias, string.Equals(module.Id, module.Alias, StringComparison.CurrentCultureIgnoreCase));
-                //DirectoryInfo data = new DirectoryInfo(System.IO.Path.Combine(ModulesPath, module.Alias, "CustomTroopUpgradesData"));
-                //stuff += string.Format("[CustomTroopUpgradesDebug] module contains CustomTroopUpgradesData: {0}\n", data.Exists);
-                //Debug.Print(stuff);
-
-                //DirectoryInfo dataPath = new DirectoryInfo(System.IO.Path.Combine(moduleDir.FullName, "CustomTroopUpgradesData"));
                 DirectoryInfo dataPath = new DirectoryInfo(System.IO.Path.Combine(ModulesPath, module.Alias, "CustomTroopUpgradesData"));
                 if (dataPath.Exists)
                 {
@@ -60,8 +52,7 @@ namespace CustomTroopUpgrades
                     {
                         try
                         {
-                            var upgrades = deserializer.Deserialize(xmlFile.OpenText()) as CustomTroopUpgrades;
-                            ApplyOperations(upgrades, game);
+                            CustomTroopUpgradesList.Add(deserializer.Deserialize(xmlFile.OpenText()) as CustomTroopUpgrades);
                         }
                         catch (Exception e)
                         {
@@ -72,12 +63,25 @@ namespace CustomTroopUpgrades
 
                 }
             }
+            CustomTroopUpgradesList.Sort();
+
+            foreach (CustomTroopUpgrades upgrades in CustomTroopUpgradesList)
+            {
+                try
+                {
+                    ApplyOperations(upgrades, game);
+                }
+                catch (Exception e)
+                {
+                    Debug.PrintError(string.Format("[CustomTroopUpgrades] Failed to apply upgrade.\n\nError: {0}\n\n{1}",
+                        e.Message, e.StackTrace), e.StackTrace);
+                }
+            }
         }
 
         public static void ApplyOperations(CustomTroopUpgrades upgrades, Game g = null)
         {
             if (Modules.Where(x => upgrades.DependentModules.Contains(x.Id)).Count() < upgrades.DependentModules.Count()) return;
-            //if (!Modules.Exists(x => x.Id.Equals(upgrades.Modules))) return;
             if (g == null) g = Game.Current;
 
             var objectList = g.ObjectManager.GetObjectTypeList<CharacterObject>();
