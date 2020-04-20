@@ -56,18 +56,16 @@ namespace CustomTroopUpgrades
             Feats = 1 << 17, // 131072
             HairTags = 1 << 18, // 262144
             BeardTags = 1 << 19, // 524288
-            CivilianEquipments = 1 << 20, // 1048576
-            BattleEquipments = 1 << 21, // 2097152
+            CivilianTemplate = 1 << 20, // 1048576
+            BattleTemplate = 1 << 21, // 2097152
+            Equipments = 1 << 22, // 4194304
 
             Upgrades = UpgradeTargets,
-            CivilianTemplate = CivilianEquipments,
-            BattleTemplate = BattleEquipments,
             FormationPosition = FormationPositionPreference,
-            Equipments = CivilianEquipments | BattleEquipments, // 3145728
             Face = TattooTags | HairTags | BeardTags | BodyProperties, // 786948
 
             AllFlags = Age | IsBasicTroop | Face | IsSoldier | IsBasicHero | UpgradeTargets | UpgradeRequires | Culture | DefaultGroup | FormationPositionPreference
-                | IsFemale | Level | Name | Occupation | Skills | Traits | Feats | Equipments; // 4194303
+                | IsFemale | Level | Name | Occupation | Skills | Traits | Feats | CivilianTemplate | BattleTemplate | Equipments; // 8388607
 
         public static bool HasFlag (int combinedFlag, int specificFlag)
         {

@@ -191,11 +191,14 @@ namespace CustomTroopUpgrades
                 if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.Feats)) CharacterFeatsField.SetValue(destination, CharacterFeatsField.GetValue(source));
                 if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.HairTags)) destination.HairTags = source.HairTags;
                 if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.BeardTags)) destination.BeardTags = source.BeardTags;
-                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.CivilianEquipments))
+                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.CivilianTemplate))
                     CivilianEquipmentTemplateField.SetValue(destination, CivilianEquipmentTemplateField.GetValue(source));
-                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.BattleEquipments))
+                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.BattleTemplate))
                     BattleEquipmentTemplateField.SetValue(destination, BattleEquipmentTemplateField.GetValue(source));
-                destination.InitializeEquipmentsOnLoad(source.AllEquipments.ToList());
+                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.Equipments))
+                    destination.InitializeEquipmentsOnLoad(source.AllEquipments.ToList());
+                else
+                    destination.InitializeEquipmentsOnLoad(destination.AllEquipments.ToList());
             }
         }
 
