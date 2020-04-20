@@ -1,6 +1,5 @@
 # Custom Troop Upgrades
- Custom Troops Upgrades - allows troop upgrade paths to be added and removed without having to modify troop XML files.
- 
+ Custom Troops Upgrades - allows troop upgrade paths to be added and removed without having to modify troop XML files, and allows overwriting of existing troop with new ones without issues that arise from overwriting troop XML files. 
  Documentation: https://github.com/Designer225/CustomTroopUpgrades/wiki
 
 ## Known Issues
