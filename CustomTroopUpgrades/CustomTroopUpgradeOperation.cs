@@ -136,16 +136,18 @@ namespace CustomTroopUpgrades
 
             if (value == 0)
             {
-                for (int i = 0; i < DependentModules.Count() && i < other.DependentModules.Count(); i++)
-                {
-                    value = DependentModules[i].CompareTo(other.DependentModules[i]);
-
-                    if (value != 0)
-                        break;
-                }
+                value = DependentModules.Count().CompareTo(other.DependentModules.Count());
 
                 if (value == 0)
-                    value = DependentModules.Count().CompareTo(other.DependentModules.Count());
+                {
+                    for (int i = 0; i < DependentModules.Count() && i < other.DependentModules.Count(); i++)
+                    {
+                        value = DependentModules[i].CompareTo(other.DependentModules[i]);
+
+                        if (value != 0)
+                            break;
+                    }
+                }
             }
 
             return value;
