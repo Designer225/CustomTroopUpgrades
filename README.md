@@ -1,5 +1,5 @@
-# Custom Troop Upgrades
- Custom Troops Upgrades - allows troop upgrade paths to be added and removed without having to modify troop XML files, and allows overwriting of existing troop with new ones without issues that arise from overwriting troop XML files. 
+# Custom Troop Upgrade and Replacer Framework
+ Custom Troops Upgrade and Replacer Framework - allows troop upgrade paths to be added and removed without having to modify troop XML files, and allows overwriting of existing troop with new ones without issues that arise from overwriting troop XML files. 
  
  Nexus link: https://www.nexusmods.com/mountandblade2bannerlord/mods/712/
  
