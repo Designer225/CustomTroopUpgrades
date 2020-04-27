@@ -52,3 +52,4 @@ D:\SteamLibrary\steamapps\common\Mount & Blade II Bannerlord\Modules\CustomTroop
 D:\SteamLibrary\steamapps\common\Mount & Blade II Bannerlord\Modules\CustomTroopUpgrades\CustomTroopUpgrades\obj\Debug\CustomTroopUpgrades.csproj.CopyComplete
 D:\SteamLibrary\steamapps\common\Mount & Blade II Bannerlord\Modules\CustomTroopUpgrades\CustomTroopUpgrades\obj\Debug\CustomTroopUpgrades.dll
 D:\SteamLibrary\steamapps\common\Mount & Blade II Bannerlord\Modules\CustomTroopUpgrades\CustomTroopUpgrades\obj\Debug\CustomTroopUpgrades.pdb
+D:\SteamLibrary\steamapps\common\Mount & Blade II Bannerlord\Modules\CustomTroopUpgrades\CustomTroopUpgrades\bin\Debug\TaleWorlds.ObjectSystem.dll
