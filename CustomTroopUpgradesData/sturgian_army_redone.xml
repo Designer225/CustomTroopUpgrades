@@ -5,49 +5,27 @@
     <Module>SturgianArmyReDone</Module>
   </DependentModules>
   <CustomTroopUpgradeOperations> <!-- Everything in this array is loaded AFTER CustomTroopReplaceOperations, below -->
-    <!-- Also, technically none of these are necessary. But I have to show how troop upgrade addition/deletion works. -->
-    <CustomTroopUpgrade Source="sturgian_recruit" Destination="sturgian_warrior_new" DeleteUpgradePath="true" />
-    <CustomTroopUpgrade Source="sturgian_recruit" Destination="sturgian_woodsman_new" DeleteUpgradePath="true" />
-    <CustomTroopUpgrade Source="sturgian_recruit" Destination="sturgian_warrior" />
-    <CustomTroopUpgrade Source="sturgian_recruit" Destination="sturgian_woodsman" />
+    <!-- The below showcases upgrade path replacements. -->
+    <CustomTroopUpgrade Source="sturgian_recruit" Destination="sturgian_warrior" Replaces="sturgian_warrior_new"/>
+    <CustomTroopUpgrade Source="sturgian_recruit" Destination="sturgian_woodsman" Replaces="sturgian_woodsman_new"/>
     
     <!-- Sturgian melee -->
-    <CustomTroopUpgrade Source="sturgian_warrior" Destination="sturgian_soldier_new" DeleteUpgradePath="true" />
-    <CustomTroopUpgrade Source="sturgian_warrior" Destination="sturgian_soldier" />
-
-    <CustomTroopUpgrade Source="sturgian_soldier" Destination="sturgian_spearman_new" DeleteUpgradePath="true" />
-    <CustomTroopUpgrade Source="sturgian_soldier" Destination="sturgian_spearman" />
-
-    <CustomTroopUpgrade Source="sturgian_spearman" Destination="sturgian_shock_troop_new" DeleteUpgradePath="true" />
-    <CustomTroopUpgrade Source="sturgian_spearman" Destination="sturgian_veteran_warrior_new" DeleteUpgradePath="true" />
-    <CustomTroopUpgrade Source="sturgian_spearman" Destination="sturgian_shock_troop" />
-    <CustomTroopUpgrade Source="sturgian_spearman" Destination="sturgian_veteran_warrior" />
-
-    <CustomTroopUpgrade Source="sturgian_t3_axeman" Destination="sturgian_berzerker_new" DeleteUpgradePath="true" />
-    <CustomTroopUpgrade Source="sturgian_t3_axeman" Destination="sturgian_berzerker" />
-    
-    <CustomTroopUpgrade Source="sturgian_berzerker" Destination="sturgian_ulfhednar_new" DeleteUpgradePath="true" />
-    <CustomTroopUpgrade Source="sturgian_berzerker" Destination="sturgian_ulfhednar" />
+    <CustomTroopUpgrade Source="sturgian_warrior" Destination="sturgian_soldier" Replaces="sturgian_soldier_new"/>
+    <CustomTroopUpgrade Source="sturgian_soldier" Destination="sturgian_spearman" Replaces="sturgian_spearman_new"/>
+    <CustomTroopUpgrade Source="sturgian_spearman" Destination="sturgian_shock_troop" Replaces="sturgian_shock_troop_new"/>
+    <CustomTroopUpgrade Source="sturgian_spearman" Destination="sturgian_veteran_warrior" Replaces="sturgian_veteran_warrior_new"/>
+    <CustomTroopUpgrade Source="sturgian_t3_axeman" Destination="sturgian_berzerker" Replaces="sturgian_berzerker_new"/>
+    <CustomTroopUpgrade Source="sturgian_berzerker" Destination="sturgian_ulfhednar" Replaces="sturgian_ulfhednar_new"/>
 
     <!-- Sturgian ranged -->
-    <CustomTroopUpgrade Source="sturgian_woodsman" Destination="sturgian_brigand_new" DeleteUpgradePath="true" />
-    <CustomTroopUpgrade Source="sturgian_woodsman" Destination="sturgian_hunter_new" DeleteUpgradePath="true" />
-    <CustomTroopUpgrade Source="sturgian_woodsman" Destination="sturgian_brigand" />
-    <CustomTroopUpgrade Source="sturgian_woodsman" Destination="sturgian_hunter" />
+    <CustomTroopUpgrade Source="sturgian_woodsman" Destination="sturgian_brigand" Replaces="sturgian_brigand_new"/>
+    <CustomTroopUpgrade Source="sturgian_woodsman" Destination="sturgian_hunter" Replaces="sturgian_hunter_new"/>
+    <CustomTroopUpgrade Source="sturgian_hunter" Destination="sturgian_archer" Replaces="sturgian_archer_new"/>
+    <CustomTroopUpgrade Source="sturgian_archer" Destination="sturgian_veteran_bowman" Replaces="sturgian_veteran_bowman_new"/>
+    <CustomTroopUpgrade Source="sturgian_brigand" Destination="sturgian_hardened_brigand" Replaces="sturgian_hardened_brigand_new"/>
+    <CustomTroopUpgrade Source="sturgian_hardened_brigand" Destination="sturgian_horse_raider" Replaces="sturgian_horse_raider_new"/>
 
-    <CustomTroopUpgrade Source="sturgian_hunter" Destination="sturgian_archer_new" DeleteUpgradePath="true" />
-    <CustomTroopUpgrade Source="sturgian_hunter" Destination="sturgian_archer" />
-
-    <CustomTroopUpgrade Source="sturgian_archer" Destination="sturgian_veteran_bowman_new" DeleteUpgradePath="true" />
-    <CustomTroopUpgrade Source="sturgian_archer" Destination="sturgian_veteran_bowman" />
-
-    <CustomTroopUpgrade Source="sturgian_brigand" Destination="sturgian_hardened_brigand_new" DeleteUpgradePath="true" />
-    <CustomTroopUpgrade Source="sturgian_brigand" Destination="sturgian_hardened_brigand" />
-
-    <CustomTroopUpgrade Source="sturgian_hardened_brigand" Destination="sturgian_horse_raider_new" DeleteUpgradePath="true" />
-    <CustomTroopUpgrade Source="sturgian_hardened_brigand" Destination="sturgian_horse_raider" />
-
-    <!-- Warrior sons and varyags -->
+    <!-- Warrior sons and varyags - the below showcases upgrade path deletion and addition -->
     <CustomTroopUpgrade Source="sturgian_warrior_son" Destination="varyag_new" DeleteUpgradePath="true" />
     <CustomTroopUpgrade Source="sturgian_warrior_son" Destination="varyag" />
     
