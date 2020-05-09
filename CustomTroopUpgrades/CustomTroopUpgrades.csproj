@@ -64,7 +64,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomTroopReplaceOperation.cs" />
     <Compile Include="CustomTroopUpgradeOperation.cs" />
+    <Compile Include="CustomTroopUpgrades.cs" />
     <Compile Include="CustomTroopUpgradesCore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

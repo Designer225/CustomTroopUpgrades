@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
 using System.Xml.Serialization;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
@@ -79,7 +76,7 @@ namespace CustomTroopUpgrades
             if (Modules.Where(x => upgrades.DependentModules.Contains(x.Id.ToLowerInvariant())).Count() < upgrades.DependentModules.Count()) return;
             if (g == null) g = Game.Current;
 
-            var objectList = g.ObjectManager.GetObjectTypeList<CharacterObject>();
+            var objectList = new List<CharacterObject>(g.ObjectManager.GetObjectTypeList<CharacterObject>());
             try
             {
                 ApplyReplaceOperations(upgrades, objectList);
@@ -139,16 +136,13 @@ namespace CustomTroopUpgrades
         private static readonly FieldInfo BattleEquipmentTemplateField =
             typeof(CharacterObject).GetField("_battleEquipmentTemplate", AllAccessFlag);
 
-        internal static void ApplyReplaceOperations(CustomTroopUpgrades upgrades, MBReadOnlyList<CharacterObject> objectList)
+        internal static void ApplyReplaceOperations(CustomTroopUpgrades upgrades, List<CharacterObject> objectList)
         {
             foreach (CustomTroopReplaceOperation operation in upgrades.CustomTroopReplaceOps)
             {
-                var items = new List<CharacterObject>(objectList.Where(x => x.StringId.Equals(operation.Source) || x.StringId.Equals(operation.Destination)));
-                if (items.Count() < 2) continue;
-
-                CharacterObject source = items.Find(x => x.StringId.Equals(operation.Source));
-                CharacterObject destination = items.Find(x => x.StringId.Equals(operation.Destination));
-                if (source == null || destination == null) continue;
+                CharacterObject source = objectList.Find(x => x.StringId.Equals(operation.Source));
+                CharacterObject destination = objectList.Find(x => x.StringId.Equals(operation.Destination));
+                if (source == default || destination == default) continue;
                 int replaceFlag = operation.ReplaceFlag == ReplaceFlags.AllFlagsZero ? ReplaceFlags.AllFlags : operation.ReplaceFlag;
 
                 // always unaffected: StringID, _originCharacterStringID
@@ -202,32 +196,54 @@ namespace CustomTroopUpgrades
             }
         }
 
-        internal static void ApplyUpgradeOperations(CustomTroopUpgrades upgrades, MBReadOnlyList<CharacterObject> objectList)
+        internal static void ApplyUpgradeOperations(CustomTroopUpgrades upgrades, List<CharacterObject> objectList)
         {
             foreach (CustomTroopUpgradeOperation operation in upgrades.CustomTroopUpgradeOps)
             {
-                var items = new List<CharacterObject>(objectList.Where(x => x.StringId.Equals(operation.Source) || x.StringId.Equals(operation.Destination)));
-                if (items.Count() < 2) continue;
-
-                CharacterObject source = items.Find(x => x.StringId.Equals(operation.Source));
-                CharacterObject destination = items.Find(x => x.StringId.Equals(operation.Destination));
-                if (source == null || destination == null) continue;
+                CharacterObject source = objectList.Find(x => x.StringId.Equals(operation.Source));
+                CharacterObject destination = objectList.Find(x => x.StringId.Equals(operation.Destination));
+                if (source == default || destination == default) continue;
 
                 var upgradeTargets = new List<CharacterObject>();
                 if (source.UpgradeTargets != null)
                     upgradeTargets.AddRange(source.UpgradeTargets);
 
-                if (upgradeTargets.Contains(destination) && operation.DeleteUpgradePath)
-                    upgradeTargets.Remove(destination);
-                if (!upgradeTargets.Contains(destination) && !operation.DeleteUpgradePath)
+                CharacterObject replaced = objectList.Find(x => x.StringId.Equals(operation.Replaces));
+                if (replaced != default)
                 {
-                    if (upgradeTargets.Count == 2)
-                        Debug.PrintWarning("[CustomTroopUpgrades] Total upgrade target count reached (max 2). " +
-                            "Consider applying delete operations first. Stopping addition.\n" +
-                            String.Format("source: {0}, targets: {1}, attempting to add: {2}",
-                            source.StringId, upgradeTargets.Select(x => x.StringId), destination.StringId));
+                    int replaceIndex = upgradeTargets.FindIndex(x => x.StringId.Equals(replaced.StringId));
+                    if (replaceIndex > -1)
+                    {
+                        upgradeTargets[replaceIndex] = destination;
+                    }
                     else
-                        upgradeTargets.Add(destination);
+                    {
+                        Debug.PrintWarning(string.Format("[CustomTroopUpgrades] No matching upgrade path from {0} to {1} ", source.StringId, replaced.StringId)
+                            + string.Format("have been found. Aborting replacement with {0}.", destination.StringId));
+                    }
+                }
+                else
+                {
+                    // sanity check to reduce number of current upgrades to 2?
+                    while (upgradeTargets.Count > 2)
+                    {
+                        Debug.PrintError("[CustomTroopUpgrades] WARNING: excess troop upgrade paths detected. This mod will remove excess upgrades, but " +
+                            string.Format("there will be problems (check your troop definition!). Removing: {0} -> {1}", source.StringId, upgradeTargets[0].StringId));
+                        upgradeTargets.RemoveAt(0);
+                    }
+
+                    if (upgradeTargets.Contains(destination) && operation.DeleteUpgradePath)
+                        upgradeTargets.Remove(destination);
+                    if (!upgradeTargets.Contains(destination) && !operation.DeleteUpgradePath)
+                    {
+                        if (upgradeTargets.Count >= 2)
+                            Debug.PrintWarning("[CustomTroopUpgrades] Total upgrade target count reached (max 2). " +
+                                "Consider applying delete operations first. Stopping addition.\n" +
+                                string.Format("source: {0}, targets: {1}, attempting to add: {2}",
+                                source.StringId, upgradeTargets.Select(x => x.StringId), destination.StringId));
+                        else
+                            upgradeTargets.Add(destination);
+                    }
                 }
 
                 UpgradeTargetsProperty.SetValue(source, upgradeTargets.ToArray());
