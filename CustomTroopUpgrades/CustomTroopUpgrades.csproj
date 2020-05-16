@@ -73,6 +73,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>cd "$(TargetDir)"
-xcopy $(TargetFileName) ..\..\..\bin\Win64_Shipping_Client /y</PostBuildEvent>
+xcopy $(TargetFileName) ..\..\..\bin\Win64_Shipping_Client /y
+xcopy $(TargetName).pdb ..\..\..\bin\Win64_Shipping_Client /y</PostBuildEvent>
   </PropertyGroup>
 </Project>
