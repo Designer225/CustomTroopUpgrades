@@ -109,6 +109,9 @@ namespace CustomTroopUpgrades
         private static readonly PropertyInfo UpgradeRequiresItemFromCategoryProperty =
             typeof(CharacterObject).GetProperty(nameof(CharacterObject.UpgradeRequiresItemFromCategory), AllAccessFlag);
 
+        private static readonly PropertyInfo DefaultFormationClassProperty =
+            typeof(BasicCharacterObject).GetProperty(nameof(BasicCharacterObject.DefaultFormationClass), AllAccessFlag);
+
         private static readonly FieldInfo DynamicBodyPropertiesField =
             typeof(BasicCharacterObject).GetField("_dynamicBodyProperties", AllAccessFlag);
 
@@ -159,7 +162,7 @@ namespace CustomTroopUpgrades
                 if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.Culture)) destination.Culture = source.Culture;
                 if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.DefaultGroup))
                 {
-                    destination.CurrentFormationClass = source.CurrentFormationClass;
+                    DefaultFormationClassProperty.SetValue(destination.DefaultFormationClass, source.DefaultFormationClass); // seems to be changed from CurrentFormationClass in the latest update
                     destination.DefaultFormationGroup = source.DefaultFormationGroup;
                 }
                 if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.BodyProperties))
@@ -238,7 +241,7 @@ namespace CustomTroopUpgrades
                     {
                         if (upgradeTargets.Count >= 2)
                             Debug.PrintWarning("[CustomTroopUpgrades] Total upgrade target count reached (max 2). " +
-                                "Consider applying delete operations first. Stopping addition.\n" +
+                                "Consider applying delete operations first. Aborting addition.\n" +
                                 string.Format("source: {0}, targets: {1}, attempting to add: {2}",
                                 source.StringId, upgradeTargets.Select(x => x.StringId), destination.StringId));
                         else

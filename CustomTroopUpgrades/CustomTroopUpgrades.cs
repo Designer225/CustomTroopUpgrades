@@ -81,9 +81,9 @@ namespace CustomTroopUpgrades
         internal void ProcessArrays()
         {
             if (CustomTroopUpgradeOps == null)
-                CustomTroopUpgradeOps = new CustomTroopUpgradeOperation[] { };
+                CustomTroopUpgradeOps = Array.Empty<CustomTroopUpgradeOperation>();
             if (CustomTroopReplaceOps == null)
-                CustomTroopReplaceOps = new CustomTroopReplaceOperation[] { };
+                CustomTroopReplaceOps = Array.Empty<CustomTroopReplaceOperation>();
         }
     }
 }
