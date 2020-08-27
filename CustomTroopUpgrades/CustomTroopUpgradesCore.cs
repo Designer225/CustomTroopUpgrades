@@ -139,6 +139,12 @@ namespace CustomTroopUpgrades
         private static readonly FieldInfo BattleEquipmentTemplateField =
             typeof(CharacterObject).GetField("_battleEquipmentTemplate", AllAccessFlag);
 
+        private static readonly PropertyInfo IsTemplateProperty =
+            typeof(CharacterObject).GetProperty(nameof(CharacterObject.IsTemplate), AllAccessFlag);
+
+        private static readonly FieldInfo PersonaField =
+            typeof(CharacterObject).GetField("_persona", AllAccessFlag);
+
         internal static void ApplyReplaceOperations(CustomTroopUpgrades upgrades, List<CharacterObject> objectList)
         {
             foreach (CustomTroopReplaceOperation operation in upgrades.CustomTroopReplaceOps)
@@ -146,26 +152,34 @@ namespace CustomTroopUpgrades
                 CharacterObject source = objectList.Find(x => x.StringId.Equals(operation.Source));
                 CharacterObject destination = objectList.Find(x => x.StringId.Equals(operation.Destination));
                 if (source == default || destination == default) continue;
-                int replaceFlag = operation.ReplaceFlag == ReplaceFlags.AllFlagsZero ? ReplaceFlags.AllFlags : operation.ReplaceFlag;
+                //int replaceFlag = operation.ReplaceFlag == ReplaceFlags.AllFlagsZero ? ReplaceFlags.AllFlags : operation.ReplaceFlag;
+                ReplaceFlags replaceFlag;
+
+                if (int.TryParse(operation.ReplaceFlag, out int iReplaceFlag))
+                    replaceFlag = (ReplaceFlags)iReplaceFlag;
+                else if (!Enum.TryParse(operation.ReplaceFlag, out replaceFlag))
+                    replaceFlag = ReplaceFlags.AllFlags;
+
+                if (replaceFlag == ReplaceFlags.AllFlagsZero) replaceFlag = ReplaceFlags.AllFlags;
 
                 // always unaffected: StringID, _originCharacterStringID
                 destination.Initialize();
-                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.Age)) destination.Age = source.Age;
-                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.IsBasicTroop)) destination.IsBasicTroop = source.IsBasicTroop;
-                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.TattooTags)) destination.TattooTags = source.TattooTags;
-                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.IsSoldier)) IsSoldierProperty.SetValue(destination, source.IsSoldier);
-                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.IsBasicHero)) IsBasicHeroField.SetValue(destination, IsBasicHeroField.GetValue(source));
-                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.UpgradeTargets))
+                if (replaceFlag.HasFlag(ReplaceFlags.Age)) destination.Age = source.Age;
+                if (replaceFlag.HasFlag(ReplaceFlags.IsBasicTroop)) destination.IsBasicTroop = source.IsBasicTroop;
+                if (replaceFlag.HasFlag(ReplaceFlags.TattooTags)) destination.TattooTags = source.TattooTags;
+                if (replaceFlag.HasFlag(ReplaceFlags.IsSoldier)) IsSoldierProperty.SetValue(destination, source.IsSoldier);
+                if (replaceFlag.HasFlag(ReplaceFlags.IsBasicHero)) IsBasicHeroField.SetValue(destination, IsBasicHeroField.GetValue(source));
+                if (replaceFlag.HasFlag(ReplaceFlags.UpgradeTargets))
                     UpgradeTargetsProperty.SetValue(destination, source.UpgradeTargets?.ToArray());
-                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.UpgradeRequires))
+                if (replaceFlag.HasFlag(ReplaceFlags.UpgradeRequires))
                     UpgradeRequiresItemFromCategoryProperty.SetValue(destination, source.UpgradeRequiresItemFromCategory);
-                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.Culture)) destination.Culture = source.Culture;
-                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.DefaultGroup))
+                if (replaceFlag.HasFlag(ReplaceFlags.Culture)) destination.Culture = source.Culture;
+                if (replaceFlag.HasFlag(ReplaceFlags.DefaultGroup))
                 {
                     DefaultFormationClassProperty.SetValue(destination.DefaultFormationClass, source.DefaultFormationClass); // seems to be changed from CurrentFormationClass in the latest update
                     destination.DefaultFormationGroup = source.DefaultFormationGroup;
                 }
-                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.BodyProperties))
+                if (replaceFlag.HasFlag(ReplaceFlags.BodyProperties))
                 {
                     DynamicBodyPropertiesField.SetValue(destination, DynamicBodyPropertiesField.GetValue(source));
                     if (!source.IsHero)
@@ -176,26 +190,30 @@ namespace CustomTroopUpgrades
                     else destination.StaticBodyPropertiesMin = (StaticBodyProperties)(StaticBodyPropertiesProperty.GetValue(source.HeroObject));
                 }
 
-                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.FormationPositionPreference))
+                if (replaceFlag.HasFlag(ReplaceFlags.FormationPositionPreference))
                     FormationPositionPreferenceProperty.SetValue(destination, source.FormationPositionPreference);
-                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.IsFemale)) destination.IsFemale = source.IsFemale;
-                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.Level)) destination.Level = source.Level;
-                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.Name)) destination.Name = source.Name;
-                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.Occupation)) OccupationProperty.SetValue(destination, source.Occupation);
-                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.Skills)) CharacterSkillsField.SetValue(destination, CharacterSkillsField.GetValue(source));
+                if (replaceFlag.HasFlag(ReplaceFlags.IsFemale)) destination.IsFemale = source.IsFemale;
+                if (replaceFlag.HasFlag(ReplaceFlags.Level)) destination.Level = source.Level;
+                if (replaceFlag.HasFlag(ReplaceFlags.Name)) destination.Name = source.Name;
+                if (replaceFlag.HasFlag(ReplaceFlags.Occupation)) OccupationProperty.SetValue(destination, source.Occupation);
+                if (replaceFlag.HasFlag(ReplaceFlags.Skills)) CharacterSkillsField.SetValue(destination, CharacterSkillsField.GetValue(source));
                 // Half end
-                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.Traits)) CharacterTraitsField.SetValue(destination, CharacterTraitsField.GetValue(source));
-                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.Feats)) CharacterFeatsField.SetValue(destination, CharacterFeatsField.GetValue(source));
-                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.HairTags)) destination.HairTags = source.HairTags;
-                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.BeardTags)) destination.BeardTags = source.BeardTags;
-                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.CivilianTemplate))
+                if (replaceFlag.HasFlag(ReplaceFlags.Traits)) CharacterTraitsField.SetValue(destination, CharacterTraitsField.GetValue(source));
+                if (replaceFlag.HasFlag(ReplaceFlags.Feats)) CharacterFeatsField.SetValue(destination, CharacterFeatsField.GetValue(source));
+                if (replaceFlag.HasFlag(ReplaceFlags.HairTags)) destination.HairTags = source.HairTags;
+                if (replaceFlag.HasFlag(ReplaceFlags.BeardTags)) destination.BeardTags = source.BeardTags;
+                if (replaceFlag.HasFlag(ReplaceFlags.CivilianTemplate))
                     CivilianEquipmentTemplateField.SetValue(destination, CivilianEquipmentTemplateField.GetValue(source));
-                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.BattleTemplate))
+                if (replaceFlag.HasFlag(ReplaceFlags.BattleTemplate))
                     BattleEquipmentTemplateField.SetValue(destination, BattleEquipmentTemplateField.GetValue(source));
-                if (ReplaceFlags.HasFlag(replaceFlag, ReplaceFlags.Equipments))
+                if (replaceFlag.HasFlag(ReplaceFlags.Equipments))
                     destination.InitializeEquipmentsOnLoad(source.AllEquipments.ToList());
                 else
                     destination.InitializeEquipmentsOnLoad(destination.AllEquipments.ToList());
+                if (replaceFlag.HasFlag(ReplaceFlags.IsTemplate))
+                    IsTemplateProperty.SetValue(destination, source.IsTemplate);
+                if (replaceFlag.HasFlag(ReplaceFlags.Persona))
+                    PersonaField.SetValue(destination, PersonaField.GetValue(source));
             }
         }
 
