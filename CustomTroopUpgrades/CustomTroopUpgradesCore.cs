@@ -155,14 +155,15 @@ namespace CustomTroopUpgrades
                 //int replaceFlag = operation.ReplaceFlag == ReplaceFlags.AllFlagsZero ? ReplaceFlags.AllFlags : operation.ReplaceFlag;
                 ReplaceFlags replaceFlag;
 
-                if (int.TryParse(operation.ReplaceFlag, out int iReplaceFlag))
-                    replaceFlag = (ReplaceFlags)iReplaceFlag;
-                else if (!Enum.TryParse(operation.ReplaceFlag, out replaceFlag))
+                if (!Enum.TryParse(operation.ReplaceFlag, out replaceFlag))
+                {
+                    Debug.Print($"[CustomTroopUpgrades] Invalid enum combo or value detected ({operation.ReplaceFlag}). Defaulting to {ReplaceFlags.AllFlags}.");
                     replaceFlag = ReplaceFlags.AllFlags;
+                }
 
                 if (replaceFlag == ReplaceFlags.AllFlagsZero) replaceFlag = ReplaceFlags.AllFlags;
 
-                Debug.Print($"[CustomTroopUpgrades] Performing replace op from {source.Id} to {destination.Id} with flag {(int)replaceFlag} ({replaceFlag})");
+                Debug.Print($"[CustomTroopUpgrades] Performing replace op from {source.StringId} to {destination.StringId} with flag {(int)replaceFlag} ({replaceFlag})");
 
                 // always unaffected: StringID, _originCharacterStringID
                 destination.Initialize();
@@ -178,7 +179,7 @@ namespace CustomTroopUpgrades
                 if (replaceFlag.HasFlag(ReplaceFlags.Culture)) destination.Culture = source.Culture;
                 if (replaceFlag.HasFlag(ReplaceFlags.DefaultGroup))
                 {
-                    DefaultFormationClassProperty.SetValue(destination.DefaultFormationClass, source.DefaultFormationClass); // seems to be changed from CurrentFormationClass in the latest update
+                    DefaultFormationClassProperty.SetValue(destination, source.DefaultFormationClass); // seems to be changed from CurrentFormationClass in the latest update
                     destination.DefaultFormationGroup = source.DefaultFormationGroup;
                 }
                 if (replaceFlag.HasFlag(ReplaceFlags.BodyProperties))
