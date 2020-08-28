@@ -40,16 +40,11 @@
   </CustomTroopUpgradeOperations>
   <CustomTroopReplaceOperations> <!-- Everything in this array is loaded BEFORE CustomTroopUpgradeOperations, above -->
     <!-- Sturgian melee -->
-    <!-- I could have specified 8388575 as ReplaceFlag, which would cause the mod to replace "everything" in a CharacterObject EXCEPT upgrade targets, -->
-    <!-- and then do less work in the above section of CustomTroopUpgradeOperations. -->
-    <!-- But I am using 8388607, which indicates replacing "everything", and so that I can show as much as I can about the upgrade operations, above. -->
-    <!-- ("Everything" does not include IDs and base character IDs. Also, 8388607 - 8388575 = 32, which is the flag to indicate replacing upgrades.) -->
-    <!-- The possible number flags can be found on the mod's GitHub wiki page. Use bitwise operation to obtain a replace flag. -->
-    <CustomTroopReplacement Source="sturgian_warrior_new" Destination="sturgian_warrior" ReplaceFlag="8388607" />
-    <!-- Absent a ReplaceFlag, the default is 8388607, which means replace everything. Using 0 will cause the mod to default to 8388607. -->
+    <CustomTroopReplacement Source="sturgian_warrior_new" Destination="sturgian_warrior" ReplaceFlag="33554431" />
+    <!-- Absent a ReplaceFlag, the default is 33554431, or AllFlags, which means replace everything. Using 0 will cause the mod to default to AllFlags. -->
     <CustomTroopReplacement Source="sturgian_soldier_new" Destination="sturgian_soldier" />
     <CustomTroopReplacement Source="sturgian_spearman_new" Destination="sturgian_spearman" ReplaceFlag="0" />
-    <CustomTroopReplacement Source="sturgian_shock_troop_new" Destination="sturgian_shock_troop" />
+    <CustomTroopReplacement Source="sturgian_shock_troop_new" Destination="sturgian_shock_troop" ReplaceFlag="AllFlags" />
     <CustomTroopReplacement Source="sturgian_veteran_warrior_new" Destination="sturgian_veteran_warrior" />
 
     <CustomTroopReplacement Source="sturgian_berzerker_new" Destination="sturgian_berzerker" />
