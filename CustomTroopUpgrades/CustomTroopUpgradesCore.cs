@@ -162,6 +162,8 @@ namespace CustomTroopUpgrades
 
                 if (replaceFlag == ReplaceFlags.AllFlagsZero) replaceFlag = ReplaceFlags.AllFlags;
 
+                Debug.Print($"[CustomTroopUpgrades] Performing replace op from {source.Id} to {destination.Id} with flag {(int)replaceFlag} ({replaceFlag})");
+
                 // always unaffected: StringID, _originCharacterStringID
                 destination.Initialize();
                 if (replaceFlag.HasFlag(ReplaceFlags.Age)) destination.Age = source.Age;
