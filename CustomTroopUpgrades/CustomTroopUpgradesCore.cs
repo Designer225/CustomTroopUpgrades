@@ -103,29 +103,26 @@ namespace CustomTroopUpgrades
         private static readonly FieldInfo IsBasicHeroField =
             typeof(BasicCharacterObject).GetField("_isBasicHero", AllAccessFlag);
 
-        private static readonly PropertyInfo UpgradeTargetsProperty =
-            typeof(CharacterObject).GetProperty(nameof(CharacterObject.UpgradeTargets), AllAccessFlag);
-
-        private static readonly PropertyInfo UpgradeRequiresItemFromCategoryProperty =
-            typeof(CharacterObject).GetProperty(nameof(CharacterObject.UpgradeRequiresItemFromCategory), AllAccessFlag);
-
         private static readonly PropertyInfo DefaultFormationClassProperty =
             typeof(BasicCharacterObject).GetProperty(nameof(BasicCharacterObject.DefaultFormationClass), AllAccessFlag);
 
         private static readonly FieldInfo DynamicBodyPropertiesField =
             typeof(BasicCharacterObject).GetField("_dynamicBodyProperties", AllAccessFlag);
 
-        private static readonly PropertyInfo StaticBodyPropertiesProperty =
-            typeof(Hero).GetProperty("StaticBodyProperties", AllAccessFlag);
-
         private static readonly PropertyInfo FormationPositionPreferenceProperty =
             typeof(BasicCharacterObject).GetProperty(nameof(BasicCharacterObject.FormationPositionPreference), AllAccessFlag);
 
-        private static readonly PropertyInfo OccupationProperty =
-            typeof(CharacterObject).GetProperty(nameof(CharacterObject.Occupation), AllAccessFlag);
-
         private static readonly FieldInfo CharacterSkillsField =
             typeof(BasicCharacterObject).GetField("_characterSkills", AllAccessFlag);
+
+        private static readonly PropertyInfo UpgradeTargetsProperty =
+            typeof(CharacterObject).GetProperty(nameof(CharacterObject.UpgradeTargets), AllAccessFlag);
+
+        private static readonly PropertyInfo UpgradeRequiresItemFromCategoryProperty =
+            typeof(CharacterObject).GetProperty(nameof(CharacterObject.UpgradeRequiresItemFromCategory), AllAccessFlag);
+
+        private static readonly PropertyInfo OccupationProperty =
+            typeof(CharacterObject).GetProperty(nameof(CharacterObject.Occupation), AllAccessFlag);
 
         private static readonly FieldInfo CharacterTraitsField =
             typeof(CharacterObject).GetField("_characterTraits", AllAccessFlag);
@@ -142,8 +139,14 @@ namespace CustomTroopUpgrades
         private static readonly PropertyInfo IsTemplateProperty =
             typeof(CharacterObject).GetProperty(nameof(CharacterObject.IsTemplate), AllAccessFlag);
 
+        private static readonly PropertyInfo IsChildTemplateProperty =
+            typeof(CharacterObject).GetProperty(nameof(CharacterObject.IsChildTemplate), AllAccessFlag);
+
         private static readonly FieldInfo PersonaField =
             typeof(CharacterObject).GetField("_persona", AllAccessFlag);
+
+        private static readonly PropertyInfo StaticBodyPropertiesProperty =
+            typeof(Hero).GetProperty("StaticBodyProperties", AllAccessFlag);
 
         internal static void ApplyReplaceOperations(CustomTroopUpgrades upgrades, List<CharacterObject> objectList)
         {
@@ -214,7 +217,10 @@ namespace CustomTroopUpgrades
                 else
                     destination.InitializeEquipmentsOnLoad(destination.AllEquipments.ToList());
                 if (replaceFlag.HasFlag(ReplaceFlags.IsTemplate))
+                {
                     IsTemplateProperty.SetValue(destination, source.IsTemplate);
+                    IsChildTemplateProperty.SetValue(destination, source.IsChildTemplate);
+                }
                 if (replaceFlag.HasFlag(ReplaceFlags.Persona))
                     PersonaField.SetValue(destination, PersonaField.GetValue(source));
             }
