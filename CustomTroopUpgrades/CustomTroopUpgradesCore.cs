@@ -57,8 +57,8 @@ namespace CustomTroopUpgrades
                         }
                         catch (Exception e)
                         {
-                            Debug.PrintError(string.Format("[CustomTroopUpgrades] Failed to load file {0}\n\nError: {1}\n\n{2}",
-                                xmlFile.FullName, e.Message, e.StackTrace), e.StackTrace);
+                            Debug.Print(string.Format("[CustomTroopUpgrades] Failed to load file {0}\n\nError: {1}\n\n{2}",
+                                xmlFile.FullName, e.Message, e.StackTrace));
                         }
                     }
                 }
@@ -83,7 +83,7 @@ namespace CustomTroopUpgrades
             }
             catch (Exception e)
             {
-                Debug.PrintError(string.Format("[CustomTroopUpgrades] Failed to apply upgrade set.\n\n{0}", e), e.StackTrace);
+                Debug.Print(string.Format("[CustomTroopUpgrades] Failed to apply upgrade set.\n\n{0}", e));
             }
             try
             {
@@ -91,7 +91,7 @@ namespace CustomTroopUpgrades
             }
             catch (Exception e)
             {
-                Debug.PrintError(string.Format("[CustomTroopUpgrades] Failed to apply upgrade set.\n\n{0}", e), e.StackTrace);
+                Debug.Print(string.Format("[CustomTroopUpgrades] Failed to apply upgrade set.\n\n{0}", e));
             }
         }
 
@@ -106,6 +106,7 @@ namespace CustomTroopUpgrades
         private static readonly PropertyInfo DefaultFormationClassProperty =
             typeof(BasicCharacterObject).GetProperty(nameof(BasicCharacterObject.DefaultFormationClass), AllAccessFlag);
 
+        // TODO: Split into _dynamicBodyPropertiesMin and _dynamicBodyPropertiesMax for e1.5.4 release
         private static readonly FieldInfo DynamicBodyPropertiesField =
             typeof(BasicCharacterObject).GetField("_dynamicBodyProperties", AllAccessFlag);
 
@@ -257,7 +258,7 @@ namespace CustomTroopUpgrades
                     // sanity check to reduce number of current upgrades to 2?
                     while (upgradeTargets.Count > 2)
                     {
-                        Debug.PrintError("[CustomTroopUpgrades] WARNING: excess troop upgrade paths detected. This mod will remove excess upgrades, but " +
+                        Debug.Print("[CustomTroopUpgrades] WARNING: excess troop upgrade paths detected. This mod will remove excess upgrades, but " +
                             string.Format("there will be problems (check your troop definition!). Removing: {0} -> {1}", source.StringId, upgradeTargets[0].StringId));
                         upgradeTargets.RemoveAt(0);
                     }
