@@ -106,9 +106,14 @@ namespace CustomTroopUpgrades
         private static readonly PropertyInfo DefaultFormationClassProperty =
             typeof(BasicCharacterObject).GetProperty(nameof(BasicCharacterObject.DefaultFormationClass), AllAccessFlag);
 
-        // TODO: Split into _dynamicBodyPropertiesMin and _dynamicBodyPropertiesMax for e1.5.4 release
         private static readonly FieldInfo DynamicBodyPropertiesField =
             typeof(BasicCharacterObject).GetField("_dynamicBodyProperties", AllAccessFlag);
+
+        private static readonly FieldInfo DynamicBodyPropertiesMinField =
+            typeof(BasicCharacterObject).GetField("_dynamicBodyPropertiesMin", AllAccessFlag);
+
+        private static readonly FieldInfo DynamicBodyPropertiesMaxField =
+            typeof(BasicCharacterObject).GetField("_dynamicBodyPropertiesMax", AllAccessFlag);
 
         private static readonly PropertyInfo FormationPositionPreferenceProperty =
             typeof(BasicCharacterObject).GetProperty(nameof(BasicCharacterObject.FormationPositionPreference), AllAccessFlag);
@@ -188,7 +193,13 @@ namespace CustomTroopUpgrades
                 }
                 if (replaceFlag.HasFlag(ReplaceFlags.BodyProperties))
                 {
-                    DynamicBodyPropertiesField.SetValue(destination, DynamicBodyPropertiesField.GetValue(source));
+                    if (DynamicBodyPropertiesField != null)
+                        DynamicBodyPropertiesField.SetValue(destination, DynamicBodyPropertiesField.GetValue(source));
+                    else
+                    {
+                        DynamicBodyPropertiesMinField.SetValue(destination, DynamicBodyPropertiesMinField.GetValue(source));
+                        DynamicBodyPropertiesMaxField.SetValue(destination, DynamicBodyPropertiesMaxField.GetValue(source));
+                    }
                     if (!source.IsHero)
                     {
                         destination.StaticBodyPropertiesMin = source.StaticBodyPropertiesMin;
