@@ -1,5 +1,5 @@
 <Module>
-	<Name value="Custom Troop Upgrade And Replacer Mod"/>
+	<Name value="Troop Replacement Framework"/>
 	<Id value="CustomTroopUpgrades"/>
 	<Version value="v0.5.2"/>
 	<SingleplayerModule value="true"/>
