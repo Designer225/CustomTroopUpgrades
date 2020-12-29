@@ -50,10 +50,13 @@ namespace CustomTroopUpgrades
                     {
                         try
                         {
-                            var upgrade = deserializer.Deserialize(xmlFile.OpenText()) as CustomTroopUpgrades;
-                            upgrade.ProcessModules();
-                            upgrade.ProcessArrays();
-                            CustomTroopUpgradesList.Add(upgrade);
+                            using (var stream = xmlFile.OpenText())
+                            {
+                                var upgrade = deserializer.Deserialize(stream) as CustomTroopUpgrades;
+                                upgrade.ProcessModules();
+                                upgrade.ProcessArrays();
+                                CustomTroopUpgradesList.Add(upgrade);
+                            }
                         }
                         catch (Exception e)
                         {
