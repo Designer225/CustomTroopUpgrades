@@ -56,17 +56,19 @@ namespace CustomTroopUpgrades
         Equipments = 1 << 22, // 4194304
         IsTemplate = 1 << 23, // 8388608
         Persona = 1 << 24, // 16777216
+        HiddenInEncylopedia = 1 << 25, // 33554432
+        CharacterRestrictionFlags = 1 << 26, // 67108864
 
         Upgrades = UpgradeTargets,
         FormationPosition = FormationPositionPreference,
         Face = TattooTags | HairTags | BeardTags | BodyProperties, // 786948
 
-        AllButUpgrades = // 33554399
-            Age | IsBasicTroop | Face | IsSoldier | IsBasicHero | UpgradeRequires | Culture | DefaultGroup | FormationPositionPreference
-            | IsFemale | Level | Name | Occupation | Skills | Traits | Feats | CivilianTemplate | BattleTemplate | Equipments | IsTemplate | Persona,
+        AllButUpgrades = // 134217695
+            AllFlags ^ Upgrades,
 
-        AllFlags = // 33554431
+        AllFlags = // 134217727
             Age | IsBasicTroop | Face | IsSoldier | IsBasicHero | UpgradeTargets | UpgradeRequires | Culture | DefaultGroup | FormationPositionPreference
-            | IsFemale | Level | Name | Occupation | Skills | Traits | Feats | CivilianTemplate | BattleTemplate | Equipments | IsTemplate | Persona
+            | IsFemale | Level | Name | Occupation | Skills | Traits | Feats | CivilianTemplate | BattleTemplate | Equipments | IsTemplate | Persona | HiddenInEncylopedia
+            | CharacterRestrictionFlags
     }
 }

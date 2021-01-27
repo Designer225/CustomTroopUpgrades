@@ -8,6 +8,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
+using TaleWorlds.ModuleManager;
 using TaleWorlds.MountAndBlade;
 
 namespace CustomTroopUpgrades
@@ -32,18 +33,12 @@ namespace CustomTroopUpgrades
             // Use TaleWorlds.Engine.Utilities.GetModulesNames(), then load ModuleInfos individually.
             // That function returns all ACTIVE modules instead.
 
-            string[] moduleNames = Utilities.GetModulesNames();
-            foreach (string moduleName in moduleNames)
-            {
-                ModuleInfo m = new ModuleInfo();
-                m.Load(moduleName);
-                Modules.Add(m);
-            }
+            Modules.AddRange(ModuleHelper.GetModules().Where(x => x.IsOfficial || x.IsSelected));
 
             XmlSerializer deserializer = new XmlSerializer(typeof(CustomTroopUpgrades));
             foreach (ModuleInfo module in Modules)
             {
-                DirectoryInfo dataPath = new DirectoryInfo(System.IO.Path.Combine(ModulesPath, module.Alias, "CustomTroopUpgradesData"));
+                DirectoryInfo dataPath = new DirectoryInfo(System.IO.Path.Combine(ModulesPath, module.Id, "CustomTroopUpgradesData"));
                 if (dataPath.Exists)
                 {
                     foreach (FileInfo xmlFile in dataPath.EnumerateFiles("*.xml"))
@@ -109,20 +104,14 @@ namespace CustomTroopUpgrades
         private static readonly PropertyInfo DefaultFormationClassProperty =
             typeof(BasicCharacterObject).GetProperty(nameof(BasicCharacterObject.DefaultFormationClass), AllAccessFlag);
 
-        private static readonly FieldInfo DynamicBodyPropertiesField =
-            typeof(BasicCharacterObject).GetField("_dynamicBodyProperties", AllAccessFlag);
-
-        private static readonly FieldInfo DynamicBodyPropertiesMinField =
-            typeof(BasicCharacterObject).GetField("_dynamicBodyPropertiesMin", AllAccessFlag);
-
-        private static readonly FieldInfo DynamicBodyPropertiesMaxField =
-            typeof(BasicCharacterObject).GetField("_dynamicBodyPropertiesMax", AllAccessFlag);
-
         private static readonly PropertyInfo FormationPositionPreferenceProperty =
             typeof(BasicCharacterObject).GetProperty(nameof(BasicCharacterObject.FormationPositionPreference), AllAccessFlag);
 
+        private static readonly PropertyInfo BodyPropertyRangeProperty =
+            typeof(BasicCharacterObject).GetProperty(nameof(BasicCharacterObject.BodyPropertyRange), AllAccessFlag);
+
         private static readonly FieldInfo CharacterSkillsField =
-            typeof(BasicCharacterObject).GetField("_characterSkills", AllAccessFlag);
+            typeof(BasicCharacterObject).GetField("CharacterSkills", AllAccessFlag);
 
         private static readonly PropertyInfo UpgradeTargetsProperty =
             typeof(CharacterObject).GetProperty(nameof(CharacterObject.UpgradeTargets), AllAccessFlag);
@@ -154,8 +143,14 @@ namespace CustomTroopUpgrades
         private static readonly FieldInfo PersonaField =
             typeof(CharacterObject).GetField("_persona", AllAccessFlag);
 
-        private static readonly PropertyInfo StaticBodyPropertiesProperty =
-            typeof(Hero).GetProperty("StaticBodyProperties", AllAccessFlag);
+        private static readonly PropertyInfo HiddenInEncyclopediaProperty =
+            typeof(CharacterObject).GetProperty(nameof(CharacterObject.HiddenInEncylopedia), AllAccessFlag);
+
+        private static readonly FieldInfo CharacterRestrictionFlagsField =
+            typeof(CharacterObject).GetField("_characterRestrictionFlags", AllAccessFlag);
+
+        //private static readonly PropertyInfo StaticBodyPropertiesProperty =
+        //    typeof(Hero).GetProperty("StaticBodyProperties", AllAccessFlag);
 
         internal static void ApplyReplaceOperations(CustomTroopUpgrades upgrades, List<CharacterObject> objectList)
         {
@@ -196,19 +191,9 @@ namespace CustomTroopUpgrades
                 }
                 if (replaceFlag.HasFlag(ReplaceFlags.BodyProperties))
                 {
-                    if (DynamicBodyPropertiesField != null)
-                        DynamicBodyPropertiesField.SetValue(destination, DynamicBodyPropertiesField.GetValue(source));
-                    else
-                    {
-                        DynamicBodyPropertiesMinField.SetValue(destination, DynamicBodyPropertiesMinField.GetValue(source));
-                        DynamicBodyPropertiesMaxField.SetValue(destination, DynamicBodyPropertiesMaxField.GetValue(source));
-                    }
-                    if (!source.IsHero)
-                    {
-                        destination.StaticBodyPropertiesMin = source.StaticBodyPropertiesMin;
-                        destination.StaticBodyPropertiesMax = source.StaticBodyPropertiesMax;
-                    }
-                    else destination.StaticBodyPropertiesMin = (StaticBodyProperties)(StaticBodyPropertiesProperty.GetValue(source.HeroObject));
+                    var bodyProperty = new MBBodyProperty();
+                    bodyProperty.Init(source.BodyPropertyRange.BodyPropertyMin, source.BodyPropertyRange.BodyPropertyMax);
+                    BodyPropertyRangeProperty.SetValue(destination, bodyProperty);
                 }
 
                 if (replaceFlag.HasFlag(ReplaceFlags.FormationPositionPreference))
@@ -228,9 +213,9 @@ namespace CustomTroopUpgrades
                 if (replaceFlag.HasFlag(ReplaceFlags.BattleTemplate))
                     BattleEquipmentTemplateField.SetValue(destination, BattleEquipmentTemplateField.GetValue(source));
                 if (replaceFlag.HasFlag(ReplaceFlags.Equipments))
-                    destination.InitializeEquipmentsOnLoad(source.AllEquipments.ToList());
+                    destination.InitializeEquipmentsOnLoad(source);
                 else
-                    destination.InitializeEquipmentsOnLoad(destination.AllEquipments.ToList());
+                    destination.InitializeEquipmentsOnLoad(destination);
                 if (replaceFlag.HasFlag(ReplaceFlags.IsTemplate))
                 {
                     IsTemplateProperty.SetValue(destination, source.IsTemplate);
@@ -238,6 +223,10 @@ namespace CustomTroopUpgrades
                 }
                 if (replaceFlag.HasFlag(ReplaceFlags.Persona))
                     PersonaField.SetValue(destination, PersonaField.GetValue(source));
+                if (replaceFlag.HasFlag(ReplaceFlags.HiddenInEncylopedia))
+                    HiddenInEncyclopediaProperty.SetValue(destination, source.HiddenInEncylopedia);
+                if (replaceFlag.HasFlag(ReplaceFlags.CharacterRestrictionFlags))
+                    CharacterRestrictionFlagsField.SetValue(destination, CharacterRestrictionFlagsField.GetValue(source));
             }
         }
 
