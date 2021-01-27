@@ -1,7 +1,7 @@
 <Module>
 	<Name value="Troop Replacement Framework"/>
 	<Id value="CustomTroopUpgrades"/>
-	<Version value="v0.5.2"/>
+	<Version value="v0.5.3"/>
 	<SingleplayerModule value="true"/>
 	<MultiplayerModule value="false"/>
 	<Official value="false"/>
