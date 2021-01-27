@@ -32,8 +32,13 @@ namespace CustomTroopUpgrades
             // DO NOT USE TaleWorlds.Library.ModuleInfo.GetModules()! It gets ALL modules, not just the active ones.
             // Use TaleWorlds.Engine.Utilities.GetModulesNames(), then load ModuleInfos individually.
             // That function returns all ACTIVE modules instead.
-
-            Modules.AddRange(ModuleHelper.GetModules().Where(x => x.IsOfficial || x.IsSelected));
+            string[] moduleNames = Utilities.GetModulesNames();
+            foreach (string moduleName in moduleNames)
+            {
+                ModuleInfo m = new ModuleInfo();
+                m.LoadWithFullPath(ModuleHelper.GetModuleFullPath(moduleName));
+                Modules.Add(m);
+            }
 
             XmlSerializer deserializer = new XmlSerializer(typeof(CustomTroopUpgrades));
             foreach (ModuleInfo module in Modules)
