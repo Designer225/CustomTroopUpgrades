@@ -1,3 +1,5 @@
+**Notice: Vanilla Bannerlord now has a much better way of replacing troops, provided you are willing to use XSLT. You should use them in place of this hack, which was produced back when XSLT wasn't really a thing in Bannerlord early access.**
+
 # Custom Troop Upgrade and Replacer Mod
  Custom Troops Upgrade and Replacer Mod - allows troop upgrade paths to be added and removed without having to modify troop XML files, and allows overwriting of existing troop with new ones without issues that arise from overwriting troop XML files. 
  
